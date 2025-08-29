@@ -205,5 +205,3 @@ Customize image search by modifying the `_get_image_for_slide` method in `PowerP
 - The python-pptx library for PowerPoint manipulation
 
 ---
-
-**Happy Presentation Generating! 🎉**
