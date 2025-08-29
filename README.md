@@ -187,6 +187,3 @@ Customize image search by modifying the `_get_image_for_slide` method in `PowerP
 - DuckDuckGo for web search capabilities
 - Google Custom Search API for enhanced search features
 - The python-pptx library for PowerPoint manipulation
-
----
-
