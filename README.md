@@ -5,10 +5,11 @@ An intelligent PowerPoint presentation generator that uses AI agents to research
 ## 🚀 Features
 
 - **Multi-Agent Architecture**: Uses specialized AI agents for different tasks
-- **Web Research**: Automatically searches the web for relevant information
+- **Web Research**: Automatically searches the web for relevant information using DuckDuckGo and Google
 - **AI-Powered Content**: Generates presentation content using Google's Gemini AI
 - **Visual Assets**: Adds relevant images to slides
 - **Professional Layout**: Creates well-structured 7-slide presentations
+- **Environment Variable Support**: Secure API key management using `.env` files
 - **Multiple Search Engines**: Uses both DuckDuckGo and Google for comprehensive research
 
 ## 📋 Prerequisites
@@ -33,36 +34,39 @@ cd AI-Deck-Generator
 pip install -r requirements.txt
 ```
 
-If you don't have a `requirements.txt` file, install the dependencies manually:
+### 3. Set Up Environment Variables
+
+Create a `.env` file in the project root directory:
 
 ```bash
-pip install google-generativeai requests beautifulsoup4 python-pptx Pillow
+# Create .env file
+touch .env
 ```
 
-### 3. Set Up API Keys
+Add your API keys to the `.env` file:
 
-#### Required: Google Gemini API Key
+```env
+# Required: Google Gemini API Key
+GOOGLE_API_KEY=your-actual-gemini-api-key-here
 
+# Optional: Google Custom Search API (for enhanced image search)
+GOOGLE_SEARCH_API_KEY=your-google-search-api-key
+CUSTOM_SEARCH_ENGINE_ID=your-custom-search-engine-id
+```
+
+#### Getting API Keys
+
+**Required: Google Gemini API Key**
 1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Create a new API key
-3. Replace the placeholder in `deck-gen.py`:
+3. Add it to your `.env` file
 
-```python
-GOOGLE_API_KEY = "your-actual-gemini-api-key-here"
-```
-
-#### Optional: Google Custom Search API (for enhanced image search)
-
+**Optional: Google Custom Search API (for enhanced image search)**
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Enable the Custom Search API
 3. Create API credentials
 4. Set up a Custom Search Engine at [Google Programmable Search Engine](https://programmablesearchengine.google.com/)
-5. Update the keys in `deck-gen.py`:
-
-```python
-GOOGLE_SEARCH_API_KEY = "your-google-search-api-key"
-CUSTOM_SEARCH_ENGINE_ID = "your-custom-search-engine-id"
-```
+5. Add the keys to your `.env` file
 
 ## 🎯 How to Use
 
@@ -97,14 +101,14 @@ The generated presentation will have this structure:
 
 ## 🔧 Configuration Options
 
-### API Key Configuration
+### Environment Variables
 
-The script uses these API keys (configured at the top of `deck-gen.py`):
+The script uses environment variables for secure API key management. Create a `.env` file with:
 
-```python
-GOOGLE_API_KEY = "your-gemini-api-key"  # Required
-GOOGLE_SEARCH_API_KEY = "your-search-api-key"  # Optional
-CUSTOM_SEARCH_ENGINE_ID = "your-search-engine-id"  # Optional
+```env
+GOOGLE_API_KEY=your-gemini-api-key
+GOOGLE_SEARCH_API_KEY=your-search-api-key
+CUSTOM_SEARCH_ENGINE_ID=your-search-engine-id
 ```
 
 ### Search Engine Options
@@ -119,8 +123,10 @@ AI-Deck-Generator/
 ├── deck-gen.py              # Main script
 ├── README.md               # This file
 ├── requirements.txt        # Python dependencies
-├── presentation-*.pptx     # Generated presentations
-└── .git/                   # Git repository
+├── .env                   # Environment variables (create this)
+├── .gitignore            # Git ignore rules
+├── presentation-*.pptx    # Generated presentations
+└── .git/                 # Git repository
 ```
 
 ## 🤖 How It Works
@@ -164,30 +170,7 @@ Modify the prompt in `ContentStrategistAgent.generate_presentation_content()` to
 
 Customize image search by modifying the `_get_image_for_slide` method in `PowerPointAssemblyAgent`.
 
-## 🐛 Troubleshooting
 
-### Common Issues
-
-1. **API Key Errors**:
-   - Ensure your Gemini API key is valid and has sufficient quota
-   - Check that the API key is properly set in the script
-
-2. **Import Errors**:
-   - Make sure all dependencies are installed: `pip install -r requirements.txt`
-
-3. **Image Download Failures**:
-   - This is normal if Google Search API keys aren't configured
-   - Presentations will still be generated without images
-
-4. **Web Search Failures**:
-   - Check your internet connection
-   - Some search engines may temporarily block requests
-
-### Error Messages
-
-- `"ERROR: Please set your GOOGLE_API_KEY"`: Add your Gemini API key
-- `"Google Search keys not provided"`: Normal if you haven't set up Google Search API
-- `"Web search failed"`: Check internet connection or try again later
 
 ## 📝 Dependencies
 
@@ -196,6 +179,7 @@ Customize image search by modifying the `_get_image_for_slide` method in `PowerP
 - `beautifulsoup4`: HTML parsing for web scraping
 - `python-pptx`: PowerPoint file creation and manipulation
 - `Pillow`: Image processing and format conversion
+- `python-dotenv`: Environment variable management
 
 ## 🙏 Acknowledgments
 
@@ -206,4 +190,3 @@ Customize image search by modifying the `_get_image_for_slide` method in `PowerP
 
 ---
 
-**Happy Presentation Generating! 🎉**

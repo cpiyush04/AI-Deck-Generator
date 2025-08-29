@@ -8,12 +8,17 @@ import json
 import io
 import urllib.parse
 from PIL import Image
+from dotenv import load_dotenv
+import os
 
-GOOGLE_API_KEY = "AIzaSyBey_pMmCkstO9fdDZ6azyBdwaTr5e-06U"
+# --- Load Environment Variables ---
+load_dotenv()
 
-GOOGLE_SEARCH_API_KEY = "AIzaSyC4ywOZdHpxNl86W6VJWR90LxCqMckMA1U"
-
-CUSTOM_SEARCH_ENGINE_ID = "b3e4263fda9824eee"
+# --- Configuration ---
+# Keys are now loaded securely from the .env file
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_SEARCH_API_KEY = os.getenv("GOOGLE_SEARCH_API_KEY")
+CUSTOM_SEARCH_ENGINE_ID = os.getenv("CUSTOM_SEARCH_ENGINE_ID")
 
 if "YOUR_GEMINI_API_KEY" in GOOGLE_API_KEY:
     print("ERROR: Please set your GOOGLE_API_KEY in the script.")
@@ -237,7 +242,6 @@ class PowerPointAssemblyAgent:
                 image_query = slide_data.get("image_query", topic)
                 image_stream = self._get_image_for_slide(image_query)
 
-                # *** MODIFIED LOGIC HERE ***
                 # If an image is found, use the two-content layout.
                 if image_stream:
                     slide = prs.slides.add_slide(prs.slide_layouts[3]) # Two Content
@@ -290,40 +294,40 @@ class PowerPointAssemblyAgent:
 
 # --- Main Execution Block ---
 if __name__ == '__main__':
-    # --- 1. GET THE PRESENTATION TOPIC FROM THE USER ---
+    # ---GET THE PRESENTATION TOPIC FROM THE USER ---
     presentation_topic = input("Please enter the topic for your presentation: ")
 
     print(f"\n--- Starting Presentation Generation for: '{presentation_topic}' ---")
 
-    # --- 2. ORCHESTRATE THE AGENTIC WORKFLOW ---
+    # ---ORCHESTRATE THE AGENTIC WORKFLOW ---
     researcher = ResearchAgent()
     orchestrator = OrchestratorAgent()
     content_strategist = ContentStrategistAgent()
     visual_director = VisualAssetAgent()
     assembler = PowerPointAssemblyAgent()
 
-    # Step 1: Research the topic
+    # Research the topic
     web_context = researcher.search_web_for_topic(presentation_topic)
     
-    # Step 2: Create a plan
+    # Create a plan
     presentation_plan = orchestrator.create_presentation_plan(presentation_topic, web_context)
     if not presentation_plan:
         print("ERROR: Failed to create presentation plan. Exiting.")
         exit()
 
-    # Step 3: Generate the initial text content
+    # Generate the initial text content
     initial_content = content_strategist.generate_presentation_content(presentation_topic, web_context, presentation_plan)
     if not initial_content:
         print("ERROR: Failed to generate initial content. Exiting.")
         exit()
         
-    # Step 4: Add image search queries to the content
+    # Add image search queries to the content
     enriched_content = visual_director.add_image_queries_to_content(initial_content)
     
-    # Step 5: Build the PowerPoint file
+    # Build the PowerPoint file
     ppt_stream = assembler.create_powerpoint_deck(enriched_content, presentation_topic)
     
-    # --- 3. SAVE THE FINAL PRESENTATION ---
+    # ---SAVE THE FINAL PRESENTATION ---
     if ppt_stream:
         output_filename = f"presentation-{presentation_topic}.pptx"
         try:
